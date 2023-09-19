@@ -140,3 +140,22 @@ pulse_df =
 pulse_df
 ```
 
+## Base R ...
+
+Don't do this for class.
+
+```{r, eval = FALSE}
+litters_df = 
+  read.csv("data/FAS_litters.csv")  #when use read.csv imports as df instead of tibble, and default is to print ENTIRE DF, with R DF using $ you can actually pull without whole thing, 'partial matching', but can cause issues later
+```
+
+```{r}
+litters_df_cleaned = 
+  read_csv("data/FAS_litters.csv")
+
+litters_df_cleaned = 
+  janitor::clean_names(litters_df_cleaned)
+
+write_csv(litters_df_cleaned, "data/litters_cleaned.csv") #to output, using relative path
+```
+

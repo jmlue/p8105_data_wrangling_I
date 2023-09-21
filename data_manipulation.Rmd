@@ -118,3 +118,39 @@ arrange(litters_df, gd0_weight) #arrange based on values in specifed column
 arrange(litters_df, group, gd0_weight) #arrange by group and then gd0_weight
 ```
 
+## pipes
+```{r}
+read_csv("data/FAS_litters.csv") %>% # new pipe command '|>'
+  janitor::clean_names() %>%
+  select(-starts_with("pups")) %>%
+  mutate(
+    group = str_to_lower(group),
+    wt_gain = gd18_weight - gd0_weight
+  ) %>%
+  drop_na(wt_gain) %>%
+  arrange(group, wt_gain)
+
+#now to actually overwrite the df
+litters_df = 
+  read_csv("data/FAS_litters.csv") %>% # new pipe command '|>'
+  janitor::clean_names() %>%
+  select(-starts_with("pups")) %>%
+  mutate(
+    group = str_to_lower(group),
+    wt_gain = gd18_weight - gd0_weight
+  ) %>%
+  drop_na(wt_gain) %>%
+  arrange(group, wt_gain)
+
+litters_df = 
+  read_csv("data/FAS_litters.csv") %>% # new pipe command '|>'
+  janitor::clean_names() %>%
+  select(-pups_survive) %>%
+  mutate(
+    group = str_to_lower(group),
+    wt_gain = gd18_weight - gd0_weight
+  ) %>%
+  drop_na(wt_gain) %>%
+  arrange(group, wt_gain)
+```
+

@@ -1,0 +1,120 @@
+---
+title: "Simple document"
+output: github_document
+date: 9/21/23
+---
+
+```{r}
+library(tidyverse)
+```
+
+Import the litters dataset
+
+```{r}
+litters_df = 
+  read_csv("data/FAS_litters.csv")
+litters_df = janitor::clean_names(litters_df) #upper case converted to lower, spaces to underscores, etc
+```
+
+Import the pups dataframe
+
+```{r}
+pups_df = read_csv("data/FAS_pups.csv")
+pups_df =  janitor::clean_names(pups_df)
+pups_df
+```
+
+## 'select'
+
+'select' is used to select columns!
+
+```{r}
+select(litters_df, group, litter_number, gd0_weight) #select out specific columns, outputs in order we write them
+
+select(litters_df, group, gd0_weight:gd_of_birth) #to select range of columns ':'
+
+select(litters_df, group, starts_with("pups")) #selecting variable columns based on first part of string
+
+select(litters_df, -litter_number) #remove that column
+
+select(litters_df, -starts_with("gd"))
+
+select(litters_df, group, litter_id = litter_number) #select litter_number, but rename litter_id
+
+select(litters_df, group, litter_id = litter_number, everything()) #can use everything to keep all, btu then rename specific columns, or change order
+
+select(litters_df, gd0_weight, everything()) #here just moving gd0_weight to first, then keep rest as is
+```
+
+'select' vs 'pull'
+```{r}
+select(litters_df, group) #still using tidyverse style, keep as tibble
+pull(litters_df, group) #selects out and saves in background as floating vector, so doesn't do tibble in and tibble out, he prefers this over $ as it is tidyverse function and has some other logic/options
+```
+
+```{r}
+rename(litters_df, litter_id = litter_number)
+
+relocate(litters_df, litter_number)
+```
+
+## try to select from pups
+```{r}
+select(pups_df, litter_number, sex, pd_ears)
+```
+
+## 'filter'
+```{r}
+filter(litters_df, group == "Con7") #= makes it into variable, == is check if equal to it,
+
+filter(litters_df, group == "Mod8") #Keep Mod8
+
+filter(litters_df, group != "Con7") #keep those not equal to Con 7
+
+filter(litters_df, gd0_weight > 20)
+
+filter(litters_df, gd0_weight <= 20)
+
+filter(litters_df, group == "Con7" | group == "Con8")
+
+filter(litters_df, group %in% c("Con7", "Con8")) #same asa bove
+
+filter(litters_df, !(group == "Con7"))
+
+filter(litters_df, group %in% c("Con7", "Con8"), gd_of_birth > 20)
+```
+
+### what about missing rows
+
+```{r}
+drop_na(litters_df) #drops all NA
+
+drop_na(litters_df, gd0_weight) #drop based on NA in specificed columns
+```
+
+
+## 'mutate'
+
+This is used ot add or change variables.
+
+```{r}
+mutate(litters_df, wt_gain = gd18_weight - gd0_weight) #doing math to make new variable based on two existing
+view(mutate(litters_df, wt_gain = gd18_weight - gd0_weight))
+
+mutate(litters_df, group = str_to_lower(group))
+
+mutate(
+  litters_df,
+  wt_gain = gd18_weight - gd0_weight,
+  group = str_to_lower(group)
+)
+```
+
+## 'arrange'
+
+```{r}
+arrange(litters_df, gd0_weight) #arrange based on values in specifed column
+
+arrange(litters_df, group, gd0_weight) #arrange by group and then gd0_weight
+```
+

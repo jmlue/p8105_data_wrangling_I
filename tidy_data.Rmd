@@ -1,0 +1,29 @@
+---
+title: "Simple document"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+## PULSE data
+
+```{r}
+pulse_df =
+  haven::read_sas("data/public_pulse_data.sas7bdat") %>% #Haven has package for reading in packages of alternative formats
+  janitor::clean_names() %>%
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit",
+    values_to = "bdi_score",
+    names_prefix = "bdi_score_" #remove prefix from column names becoming values
+  ) %>% #go from wide format to long format, and what will rename new ones
+  mutate(
+    visit = replace(visit, visit == "bl", "00m")
+  )
+
+```
+
+
+

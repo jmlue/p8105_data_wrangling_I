@@ -105,3 +105,29 @@ fas_df =
   left_join(pups_df, litters_df, by = "litter_number") #left_join will automatically look for columns of similiar name and join based on left if we don't give columns
 ```
 
+
+## Second self-assessment
+
+The datasets in this zip file contain de-identified responses to surveys included in past years of this course. Both contain a unique student identifier; the first has responses to a question about operating systems, and the second has responses to questions about degree program and git experience. Write a code chunk that imports and cleans both datasets, and then joins them
+
+```{r}
+surv_os_df =
+  read_csv("survey_results/surv_os.csv") %>%
+  janitor::clean_names()
+
+surv_program_git_df = 
+  read_csv("survey_results/surv_program_git.csv") %>%
+  janitor::clean_names()
+
+surv_combined_df =
+  full_join(surv_os_df, surv_program_git_df, by = "what_is_your_uni") %>%
+  rename("Uni" = "what_is_your_uni", "OS" = "what_operating_system_do_you_use","Degree" = "what_is_your_degree_program", 
+         "GIT"  = "which_most_accurately_describes_your_experience_with_git") 
+
+left_join(surv_os_df, surv_program_git_df)
+inner_join(surv_os_df, surv_program_git_df)
+anti_join(surv_os_df, surv_program_git_df)
+anti_join(surv_program_git_df, surv_os_df)
+
+```
+

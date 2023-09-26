@@ -50,3 +50,33 @@ pulse_trial_df =
 
 It is tidy if wanting to see relationship between gd and weight, but if wanting to make a delta of weight change, then not a great tidy version for it
 
+
+## LoTR (Bind Rows)
+
+Import LoTR words data
+
+```{r}
+fellowship_df =
+  readxl::read_excel("data/LotR_Words.xlsx", range = "B3:D6") %>% #range function is to tell which cells you want to read using Excel notation
+  mutate(movie = "fellowship")
+
+two_towers_df =
+  readxl::read_excel("data/LotR_Words.xlsx", range = "F3:H6") %>% #range function is to tell which cells you want to read using Excel notation
+  mutate(movie = "two towers")
+
+Return_of_the_king_df =
+  readxl::read_excel("data/LotR_Words.xlsx", range = "J3:L6") %>% #range function is to tell which cells you want to read using Excel notation
+  mutate(movie = "return of the king")
+
+lotr_df = 
+  bind_rows(fellowship_df, two_towers_df, Return_of_the_king_df) %>%
+  pivot_longer(
+    Male:Female,
+    names_to = "gender",
+    values_to = "word"
+  ) %>%
+  relocate(movie) #moves to first column
+
+```
+
+

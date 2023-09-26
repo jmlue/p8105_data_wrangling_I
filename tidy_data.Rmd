@@ -26,4 +26,27 @@ pulse_df =
 ```
 
 
+## Learning assessment
+
+In the litters data, the variables gd0_weight and gd18_weight give the weight of the mother mouse on gestational days 0 and 18. Write a data cleaning chain that retains only litter_number and these columns; produces new variables gd and weight; and makes gd a numeric variable taking values 0 and 18 (for the last part, you might want to use recode …). Is this version “tidy”?
+
+```{r}
+pulse_trial_df =
+  read_csv("data/FAS_litters.csv") %>%
+  janitor::clean_names() %>%
+  select(litter_number, gd0_weight, gd18_weight) %>%
+  pivot_longer(
+    gd0_weight:gd18_weight,
+    names_to = "gd",
+    values_to = "weight",
+    names_prefix = "gd"
+      ) %>%
+  mutate(
+    gd = case_match(gd, 
+                    "0_weight" ~ 0,
+                    "18_weight" ~ 18)
+  )
+```
+
+It is tidy if wanting to see relationship between gd and weight, but if wanting to make a delta of weight change, then not a great tidy version for it
 
